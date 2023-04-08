@@ -1,25 +1,13 @@
 Scraper for dump your film ratings from kinopoisk.ru.
 
-# Installation
+# Installation and run
 
 ```bash
 $ pip install -r requirements.txt
-$ scrapy startproject scraper
 $ cd scraper
-$ scrapy genspider kinopoisk www.kinopoisk.ru
+$ python start.py
 ```
-
-# Configure
-
-Setup cookie `ya_sess_id` in `scraper.spiders.KinopoiskSpider.COOKIES`.
-
-# Run
-
-Update by uid from cookies.
-
-```bash
-$ scrapy crawl kinopoisk -o ratings.csv -t csv -a user_id=<uid>
-```
+Put your __uid__ and __ya_sess_id__ from cookie (using Chrome `Ctrl` + `Shift` + `I` > Application > Cookies )
 
 # Related link
 

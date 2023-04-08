@@ -23,13 +23,20 @@ class KinopoiskSpider(scrapy.Spider):
         'ya_sess_id': ''
     }
 
-    def decode_score(self, encoded, base):
-        decoded = base64.b64decode(encoded)
-        xored = ''.join([chr(b ^ ord(base[index % len(base)])) for index, b in enumerate(decoded)])
-        result = re.findall('\'(\d+)', unquote(xored))
+    custom_settings = {
+        'FEEDS': {
+            'ratings.csv' : {
+                'format': 'csv'
+            }
+        }
+    }
+
+    def get_score(self, encoded):
+        result = re.findall('\'(\d+)', unquote(encoded))
         return result[0]
 
     def start_requests(self):
+        self.COOKIES['ya_sess_id'] = self.ya_sess_id
         url = self.BASE_URL.format(user_id=self.user_id, items_per_page=self.ITEMS_PER_PAGE)
         yield scrapy.Request(url=url, callback=self.parse_list, cookies=self.COOKIES)
 
@@ -44,7 +51,7 @@ class KinopoiskSpider(scrapy.Spider):
             loader = KinopoiskLoader(item=FilmItem(), response=response, selector=item)
             link = item.xpath('div/div[@class="nameRus"]/a')[0].attrib['href']
             score = item.xpath('script/text()')[0].root
-            loader.add_value('score', self.decode_score(*score.split(';')[0][35:-4].split("`),`")))
+            loader.add_value('score', self.get_score(score.split(';')[0][35:-4].split("`),`")[0]))
             loader.add_value('link', f'https://{self.allowed_domains[0]}{link}')
             try:
                 description = re.match('^(.*)\s\((\d{4})\)$', item.xpath('div/div[@class="nameRus"]/a/text()')[0].root)
