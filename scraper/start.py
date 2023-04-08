@@ -42,15 +42,17 @@ def create_gui():
     ya_sess_id_entry = ttk.Entry(root)
     ya_sess_id_entry.pack()
 
-    user_id = ''
-    ya_sess_id = ''
+    enabled = tk.IntVar()
+    enabled_checkbutton = ttk.Checkbutton(text="Letterboxd", variable=enabled)
+    enabled_checkbutton.pack()
 
     def submit_form():
         user_id = user_id_entry.get()
         ya_sess_id = ya_sess_id_entry.get()
-        start_crawler(user_id, ya_sess_id)
+        start_crawler(user_id, ya_sess_id, enabled.get())
         messagebox.showinfo("Processing", "Processing complete")
         root.destroy()
+
 
     # Create a submit button
     submit_button = tk.Button(root, text="Submit", command=submit_form)
@@ -59,11 +61,11 @@ def create_gui():
     # Start the tkinter event loop
     root.mainloop()
 
-def start_crawler(user_id, ya_sess_id):
+def start_crawler(user_id, ya_sess_id, flag):
     settings = get_project_settings()
     process = CrawlerProcess(settings)
     process.crawl(KinopoiskSpider)
-    process.crawl(KinopoiskSpider, input='inputargument', user_id=user_id, ya_sess_id=ya_sess_id)
+    process.crawl(KinopoiskSpider, input='inputargument', user_id=user_id, ya_sess_id=ya_sess_id, letterboxd = flag)
     process.start()
 
 
