@@ -15,3 +15,8 @@ class FilmItem(scrapy.Item):
     link = scrapy.Field(input_processor=TakeFirst(), output_processor=TakeFirst())
     date = scrapy.Field(input_processor=TakeFirst(), output_processor=TakeFirst())
     score = scrapy.Field(input_processor=TakeFirst(), output_processor=TakeFirst())
+
+class LetterboxdItem(scrapy.Item):
+    Title = scrapy.Field(input_processor=TakeFirst(), output_processor=TakeFirst())
+    WatchedDate = scrapy.Field(input_processor=TakeFirst(), output_processor=TakeFirst())
+    Rating10 = scrapy.Field(input_processor=TakeFirst(), output_processor=TakeFirst())
